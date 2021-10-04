@@ -1,0 +1,42 @@
+{
+    "name": "applab/sadad",
+    "description": "Applab Sadad",
+    "keywords": [
+        "Laravel",
+        "Sadad",
+        "Payment",
+        "Applab",
+        "Qatar"
+    ],
+    "require": {
+        "php": ">=5.6",
+        "guzzlehttp/guzzle": ">=6"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Applab\\Sadad\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Applab\\Sadad\\SadadServiceProvider"
+            ],"aliases": {
+                "Sadad": "Applab\\Sadad\\Facades\\Sadad"
+            }
+        }
+    },
+    "authors": [
+        {
+            "name": "manu-applab",
+            "email": "manu@applab.qa"
+        }
+    ],
+    "config": {
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "optimize-autoloader": true
+    },
+    "minimum-stability": "dev"
+}
