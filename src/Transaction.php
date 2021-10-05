@@ -19,7 +19,7 @@ class Transaction extends GClient
                     'Authorization' =>  Cache::get('sadad-access-token'),
                     'Accept' => 'application/json',
                     'Content-Type' => 'application/json',
-                ],'json' => $body
+                ],'body' => $body
             ]);
             if ($response->getStatusCode()==200) {
                 return $response->getBody();
@@ -51,7 +51,7 @@ class Transaction extends GClient
                     $query='?filter[skip]=0';
                 }
                 if(in_array('limit',$filter)){
-                    $query.='?filter[limit]='.$filter['limit'];
+                    $query.='&filter[limit]='.$filter['limit'];
                 }else{
                     $query.='&filter[limit]=10';
                 }if(in_array('cellnumber',$filter)){
@@ -66,6 +66,8 @@ class Transaction extends GClient
                         }
                     }
                 }
+            }else{
+                $query='?filter[skip]=0&filter[limit]=20';
             }
             $response = $this->client->request('GET', 'transactions/listTransactions'.$query, [
                 'headers' => [

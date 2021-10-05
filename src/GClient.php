@@ -13,7 +13,7 @@ class GClient extends Client
     public function __construct()
     {
         $this->client=new Client([
-            'base_uri'=>config('sadad-config.api-url');
+            'base_uri'=>config('applab-sadad.api-url')
         ]);
         return $this->client;
     }

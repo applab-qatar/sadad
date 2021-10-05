@@ -12,7 +12,7 @@ class Sadad
      */
     public function __construct()
     {
-        if(!Cache::has('sadad-access-token') && empty(Cache::get('sadad-access-token'))){
+        if(!Cache::has('sadad-access-token') || empty(Cache::get('sadad-access-token'))){
             $this->authClass=new Authentication();
             $this->authClass->login();
         }
