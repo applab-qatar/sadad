@@ -13,13 +13,13 @@ class Transaction extends GClient
     public function single($transNo)
     {
         try {
-            $body=json_encode(['transactionno'=>$transNo]);
+            $body=['transactionno'=>$transNo];
             $response = $this->client->request('GET', 'transactions/getTransaction', [
                 'headers' => [
                     'Authorization' =>  Cache::get('sadad-access-token'),
                     'Accept' => 'application/json',
-                    'Content-Type' => 'application/json',
-                ],'body' => $body
+                    'Content-Type' => 'application/x-www-form-urlencoded',
+                ],'form_params' => $body
             ]);
             if ($response->getStatusCode()==200) {
                 return $response->getBody();
@@ -89,8 +89,8 @@ class Transaction extends GClient
     public function refund($transNo)
     {
         try {
-            $body=json_encode(['transactionnumber'=>$transNo]);
-            $response = $this->client->request('GET', 'transactions/refundTransaction', [
+            $body=json_encode(['transactionno'=>$transNo]);
+            $response = $this->client->request('POST', 'transactions/refundTransaction', [
                 'headers' => [
                     'Authorizations' =>  Cache::get('sadad-access-token'),
                     'Accept' => 'application/json',
