@@ -2,47 +2,41 @@
 
 namespace Applab\Sadad;
 
+use Applab\Sadad\Http\Transaction;
+use Applab\Sadad\Http\Payment;
+use Applab\Sadad\Models\SadadLog;
 use Exception;
-use Illuminate\Support\Facades\Cache;
 
-class Sadad
+class Sadad extends Payment
 {
-    /*
-     *
-     */
-    public function __construct()
-    {
-        if(!Cache::has('sadad-access-token') || empty(Cache::get('sadad-access-token'))){
-            $this->authClass=new Authentication();
-            $this->authClass->login();
-        }
-        $this->transaction=new Transaction();
-    }
     /*
      * Single
      */
-    public function getSingle($transactionNo)
+    public function getTransaction($transactionNo)
     {
-        try{
-            $response= $this->transaction->single($transactionNo);
-            return json_decode($response);
-        }catch(Exception $e){
-            \Log::error("SadadTransactionSingle::Exception ".$e->getMessage());
-            throw $e;
-        }
+        $transaction=new Transaction();
+        return $transaction->getSingle($transactionNo);
     }
 
     /*
        * All
    */
-    public function getAll($filter)
+    public function getTransactions($filter)
     {
-        try{
-            $response= $this->transaction->list($filter);
-            return json_decode($response);
-        }catch(Exception $e){
-            \Log::error("SadadTransactionAll::Exception ".$e->getMessage());
-            throw $e;
-        }
+        $transaction=new Transaction();
+        return $transaction->getAll($filter);
+    }
+    public static function __callStatic($name, $arguments)
+    {
+        call_user_func($name, $arguments);
+    }
+    private function logEntry($model,$response)
+    {
+        $logCreated=new SadadLog();
+        $logCreated->transable_type=$model->getMorphClass();
+        $logCreated->transable_id=$model->id;
+        $logCreated->response=$response;
+        $logCreated->save();
+        return $logCreated;
     }
 }

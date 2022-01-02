@@ -1,25 +1,35 @@
 <?php
 
 
-namespace Applab\Sadad;
+namespace Applab\Sadad\Api;
 
-use Applab\Sadad\Models\SadadLog;
+use Applab\Sadad\ApiAuthentication;
+use Applab\Sadad\Utilities\PayConfig;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
 use Exception;
-class Transaction extends GClient
+class Transaction extends PayConfig
 {
+    /*
+     */
+    public function __construct()
+    {
+        if(!Cache::has('sadad-access-token') || empty(Cache::get('sadad-access-token'))){
+            $this->authClass=new Authentication();
+            $this->authClass->login();
+        }
+        parent::__construct();
+    }
     public function single($transNo)
     {
         try {
-            $body=['transactionno'=>$transNo];
             $response = $this->client->request('GET', 'transactions/getTransaction', [
                 'headers' => [
                     'Authorization' =>  Cache::get('sadad-access-token'),
                     'Accept' => 'application/json',
                     'Content-Type' => 'application/x-www-form-urlencoded',
-                ],'form_params' => $body
+                ],'form_params' => ['transactionno'=>$transNo]
             ]);
             if ($response->getStatusCode()==200) {
                 return $response->getBody();
@@ -104,15 +114,5 @@ class Transaction extends GClient
         } catch (GuzzleException $e) {
             throw $e;
         }
-    }
-
-    private function logEntry($model,$response)
-    {
-        $logCreated=new SadadLog();
-        $logCreated->transable_type=$model->getMorphClass();
-        $logCreated->transable_id=$model->id;
-        $logCreated->response=$response;
-        $logCreated->save();
-        return $logCreated;
     }
 }
