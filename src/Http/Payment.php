@@ -16,8 +16,9 @@ class Payment extends PayConfig
     {
         parent::__construct();
     }
-
-
+    /*
+     * Preparing request data
+     */
     public function reqData($wco_request)
     {
         $checksum_array = array();
@@ -42,6 +43,9 @@ class Payment extends PayConfig
         $checksum_array['txnDate'] =  date('Y-m-d H:i:s');
         return $checksum_array;
     }
+    /*
+     * Web Checkout Version One
+     */
     public function webCheckoutOne(WCORequest $request,$returnType='view')
     {
         try{
@@ -77,7 +81,7 @@ class Payment extends PayConfig
 
                 $checksum = self::getFromString(json_encode($_checksum_data), $this->secret_key . $this->merchant_id);
                 $sAry1[] = "";
-                $form= self::makeForm($_checksum_data,$checksum);
+                $form= self::makeFormOne($_checksum_data,$checksum);
                 if($returnType==='view')
                     return view('sadad::web-checkout-one', compact('form'));
                 else
@@ -91,10 +95,12 @@ class Payment extends PayConfig
             throw $e;
         }
     }
-
-    private function makeForm($_checksum_data,$checksum)
+/*
+ * Preparing Form for WebCheckout One
+ */
+    private function makeFormOne($_checksum_data,$checksum)
     {
-        $form = '<form method="post" id="sadad_payment_form" name="gosadad" action="' . $this->requestUrl . '" data-link="' . $this->requestUrl . '">';
+        $form = '<form style="display:none" method="post" id="sadad_payment_form" name="gosadad" action="' . $this->requestUrl . '" data-link="' . $this->requestUrl . '">';
         foreach ($_checksum_data['postData'] as $k => $v) {
             if ($k != 'productdetail') {
                 $form .= '<input type="hidden" name="' . $k . '" value="' . $v . '"><br />';
