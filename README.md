@@ -62,6 +62,7 @@ Customer is on your website’s checkout page and fills up the details and place
     $webCheckoutOneReq->setProducts($products);
     return Sadad::webCheckoutOne($webCheckoutOneReq);//default view
 ```
+exclude your callback url in verify CSRF Token middleware to get the post response from SADAD
 ### Merchant Integration APIs
 #### Transactions List
 ```bash
