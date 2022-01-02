@@ -6,15 +6,15 @@
 Sadad is a Qatari Platform to send/receive payment via online [store / Website / portal ] and mobile [applications]
 
 Below are a full list of features:
-- Merchant Integration APIs
-    - Authentication.
-    - Transaction - List Transactions 
+- Web Checkout
+- API Integration
+    - Transactions - List Transactions 
     - Transaction - Get Single Transaction
     - Transaction - Refund Transaction
 
 ## About Applab
 
-AppLab is a leading company specialized in online platforms development. Online Platforms include Back-end, Databases, Web Applications and Mobile
+[AppLab](https://applab.qa/contact-us) is a leading company specialized in online platforms development. Online Platforms include Back-end, Databases, Web Applications and Mobile
 
 ## About Sadad Platform
 
@@ -50,7 +50,28 @@ Issued when register your domain
 domain
 ```
 Your registered domain name
-
+### WebCheckout 2.1
+Customer is on your website’s checkout page and fills up the details and places order.
+```bash
+    $webCheckoutOneReq=new WCORequest();     
+    $webCheckoutOneReq->total_amount=100;
+    $webCheckoutOneReq->order_id=$webCheckoutReq->getOrderId();
+    $webCheckoutOneReq->customer_mobile="974XXXXXXXX";
+    $webCheckoutOneReq->callback_url=url('sadad-purchased/'.$webCheckoutReq->order_id);      
+    $products[]=['title'=>"product name",'id'=>123,'quantity'=>1,'amount'=>1,'type'=>'line_item'];
+    $webCheckoutOneReq->setProducts($products);
+    return Sadad::webCheckoutOne($webCheckoutOneReq);//default view
+```
+### Merchant Integration APIs
+#### Transactions List
+```bash
+  $filters=[];
+  Sadad::getTransactions($filter)
+```
+#### Transaction details
+```bash
+  Sadad::getTransaction('SD33XXXXXXXXXX8')
+```
 ## Security Vulnerabilities
 
 If you discover a security vulnerability within this package, please send an e-mail to Manu Applab via [manu@applab.qa](mailto:manu@applab.qa). All security vulnerabilities will be promptly addressed.
