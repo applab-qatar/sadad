@@ -10,7 +10,7 @@
                 <div class="invoice-wrapper successful">
                     <div class="content-wrapper"
                          style="padding:20px 20px 10px;border-radius: 30px;margin:20px 0;background-color: #f8f8ff">
-                        <div class="confirm fail text-center">
+                        <div class="confirm text-center">
                             <h3 style="color:#53ff53">@lang('global.payment_success')!</h3>
                         </div>
                     </div>
