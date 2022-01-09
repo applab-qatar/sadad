@@ -11,7 +11,10 @@
 
         <div @if(app()->getLocale()=='ar') dir="rtl" @endif class="flex flex-col w-full p-4 bg-green-100 rounded-lg border border-green-400">
             <span class="font-sedmibold text-green-600 text-center text-lg">
-                {{ trans('Payment Successfull!') }}
+                {{ trans('Congratulations!') }}
+            </span>
+            <span class="font-sedmibold text-green-600 text-center text-xs">
+                {{ trans('You have successfully subscribed.') }}
             </span>
 
             <div class="flex justify-between items-center w-full mt-2">
