@@ -22,7 +22,7 @@
                     {{ trans('Transaction No.') }}
                 </span>
                 <span class="text-gray-600 text-xs">
-                    {{ $payment->id }}
+                    {{ $payment->payment_id }}
                 </span>
             </div>
 
