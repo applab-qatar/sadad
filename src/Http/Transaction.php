@@ -37,4 +37,19 @@ class Transaction extends PayConfig
             throw $e;
         }
     }
+
+    /**
+     * Refund transactions
+     */
+    public function refundTransaction($transactionNo)
+    {
+        try{
+            $transaction=new ApiTransaction();
+            $response= $transaction->refund($transactionNo);
+            return json_decode($response);
+        }catch(Exception $e){
+            \Log::error("SADAD refundTransaction::Exception ".$e->getMessage());
+            throw $e;
+        }
+    }
 }
