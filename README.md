@@ -73,6 +73,10 @@ exclude your callback url in verify CSRF Token middleware to get the post respon
 ```bash
   Sadad::getTransaction('SD33XXXXXXXXXX8')
 ```
+#### Transaction refund
+```bash
+  Sadad::refundTransaction('SD33XXXXXXXXXX8')
+```
 ## Security Vulnerabilities
 
 If you discover a security vulnerability within this package, please send an e-mail to Manu Applab via [manu@applab.qa](mailto:manu@applab.qa). All security vulnerabilities will be promptly addressed.

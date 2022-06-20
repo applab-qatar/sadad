@@ -26,6 +26,19 @@ class Sadad extends Payment
         $transaction=new Transaction();
         return $transaction->getAll($filter);
     }
+
+    /**
+     * Refun transaction 
+     *
+     * @param string $transactionNo
+     * @return Response
+     */
+    public function refundTransaction($transactionNo)
+    {
+        $transaction=new Transaction();
+        return $transaction->refundTransaction($transactionNo);
+    }
+
     public static function __callStatic($name, $arguments)
     {
         call_user_func($name, $arguments);
