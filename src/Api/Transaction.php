@@ -64,7 +64,11 @@ class Transaction extends PayConfig
                     $query.='&filter[limit]='.$filter['limit'];
                 }else{
                     $query.='&filter[limit]=10';
-                }if(in_array('cellnumber',$filter)){
+                }
+                if(in_array('website_ref_no',$filter)){
+                    $query='&filter[website_ref_no]='.$filter['website_ref_no'];
+                }
+                if(in_array('cellnumber',$filter)){
                     $query.='&filter[cellnumber]='.$filter['cellnumber'];
                 }elseif(in_array('date_range',$filter)){
                     if(in_array('start_date',$filter['date_range'])) {
