@@ -52,4 +52,46 @@ class Transaction extends PayConfig
             throw $e;
         }
     }
+
+    public function listInvoices($filter)
+    {
+        try{
+            $transaction=new ApiTransaction();
+            $response= $transaction->listInvoices($filter);
+            return json_decode($response);
+        }catch(Exception $e){
+            \Log::error("SADAD listInvoice::Exception ".$e->getMessage());
+            throw $e;
+        }
+    }
+
+    /**
+     * Create invoice
+     */
+    public function createInvoice($payload)
+    {
+        try{
+            $transaction = new ApiTransaction();
+            $response = $transaction->createInvoice($payload);
+            return json_decode($response);
+        }catch(Exception $e){
+            \Log::error("SADAD createInvoice::Exception ".$e->getMessage());
+            throw $e;
+        }
+    }
+
+    /**
+     * Share invoice
+     */
+    public function shareInvoice($payload)
+    {
+        try{
+            $transaction = new ApiTransaction();
+            $response = $transaction->shareInvoice($payload);
+            return json_decode($response);
+        }catch(Exception $e){
+            \Log::error("SADAD shareInvoice::Exception ".$e->getMessage());
+            throw $e;
+        }
+    }
 }

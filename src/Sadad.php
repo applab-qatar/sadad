@@ -39,6 +39,42 @@ class Sadad extends Payment
         return $transaction->refundTransaction($transactionNo);
     }
 
+    /**
+     * List invoices
+     *
+     * @param array $filter
+     * @return Response
+     */
+    public function listInvoices($filter)
+    {
+        $transaction = new Transaction();
+        return $transaction->listInvoices($filter);
+    }
+
+    /**
+     * Create invoice
+     *
+     * @param array $payload
+     * @return Response
+     */
+    public function createInvoice($payload)
+    {
+        $transaction = new Transaction();
+        return $transaction->createInvoice($payload);
+    }
+
+    /**
+     * Share invoice
+     *
+     * @param array $payload
+     * @return Response
+     */
+    public function shareInvoice($payload)
+    {
+        $transaction = new Transaction();
+        return $transaction->shareInvoice($payload);
+    }
+
     public static function __callStatic($name, $arguments)
     {
         call_user_func($name, $arguments);

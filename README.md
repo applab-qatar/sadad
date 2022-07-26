@@ -52,30 +52,81 @@ domain
 Your registered domain name
 ### WebCheckout 2.1
 Customer is on your website’s checkout page and fills up the details and places order.
-```bash
-    $webCheckoutOneReq=new WCORequest();     
-    $webCheckoutOneReq->total_amount=100;
-    $webCheckoutOneReq->order_id=$webCheckoutReq->getOrderId();
-    $webCheckoutOneReq->customer_mobile="974XXXXXXXX";
-    $webCheckoutOneReq->callback_url=url('sadad-purchased/'.$webCheckoutReq->order_id);      
-    $products[]=['title'=>"product name",'id'=>123,'quantity'=>1,'amount'=>1,'type'=>'line_item'];
-    $webCheckoutOneReq->setProducts($products);
-    return Sadad::webCheckoutOne($webCheckoutOneReq);//default view
+```php
+  $webCheckoutOneReq = new WCORequest();     
+  $webCheckoutOneReq->total_amount=100;
+  $webCheckoutOneReq->order_id = $webCheckoutReq->getOrderId();
+  $webCheckoutOneReq->customer_mobile = "974XXXXXXXX";
+  $webCheckoutOneReq->callback_url = url('sadad-purchased/'.$webCheckoutReq->order_id);      
+  $products[] = [
+    'id' => 123,
+    'title' => "product name",
+    'quantity' => 1,
+    'amount' => 1,
+    'type' => 'line_item'
+  ];
+  $webCheckoutOneReq->setProducts($products);
+  return Sadad::webCheckoutOne($webCheckoutOneReq); //default view
 ```
 exclude your callback url in verify CSRF Token middleware to get the post response from SADAD
 ### Merchant Integration APIs
 #### Transactions List
-```bash
-  $filters=[];
+```php
+  $filters = [];
   Sadad::getTransactions($filter)
 ```
 #### Transaction details
-```bash
+```php
   Sadad::getTransaction('SD33XXXXXXXXXX8')
 ```
 #### Transaction refund
-```bash
+```php
   Sadad::refundTransaction('SD33XXXXXXXXXX8')
+```
+#### Invoices List
+```php
+  $filters = [];
+  Sadad::getInvoices($filter)
+```
+#### Create Invoice
+```php
+  $invoiceData = new InvoiceRequest();
+  $invoiceData->countryCode = '974';
+  $invoiceData->cellnumber = '66XXXXXX';
+  $invoiceData->clientname = 'Client name';
+  // Status for Invoice
+  // 1 - Draft, 2 - Unpaid, 3 - Paid, 4 - Overdue, 5 - Cancelled
+  $invoiceData->status = 2;
+  $invoiceData->remarks = 'Invoice test remarks';
+  $invoiceData->amount = 100; // Total amount in QR
+
+  // Invoice can have many item
+  $invoice_details[] = [
+      'description' => 'Testing 123',
+      'quantity' => 1,
+      'amount' => 100, // Amount for each item
+  ];
+  $invoiceData->setInvoiceDetails($invoice_details);
+  $payload = $invoiceData->preparePayload()->getPayload();
+
+  return Sadad::createInvoice($payload);
+```
+#### Share Invoice
+```php
+  // Share using mobile
+  $payload = [
+    'sentvia' => 4,
+    'invoicenumber' => 'SD66XXXXXXXXX8',
+    'receivercellno' => '66XXXXXX',
+  ];
+  // Share using email
+  $payload = [
+    'sentvia' => 3,
+    'invoicenumber' => 'SD66XXXXXXXXX8',
+    'receiverEmail' => 'mail@example.com',
+  ];
+
+  return Sadad::shareInvoice($payload); 
 ```
 ## Security Vulnerabilities
 
