@@ -3,7 +3,6 @@
 
 namespace Applab\Sadad\Api;
 
-use Applab\Sadad\ApiAuthentication;
 use Applab\Sadad\Utilities\PayConfig;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Facades\Cache;
@@ -66,7 +65,7 @@ class Transaction extends PayConfig
                     $query.='&filter[limit]=10';
                 }
                 if(in_array('website_ref_no',$filter)){
-                    $query='&filter[website_ref_no]='.$filter['website_ref_no'];
+                    $query.='&filter[website_ref_no]='.$filter['website_ref_no'];
                 }
                 if(in_array('cellnumber',$filter)){
                     $query.='&filter[cellnumber]='.$filter['cellnumber'];
@@ -103,18 +102,118 @@ class Transaction extends PayConfig
     public function refund($transNo)
     {
         try {
-            $body=json_encode(['transactionno'=>$transNo]);
             $response = $this->client->request('POST', 'transactions/refundTransaction', [
                 'headers' => [
-                    'Authorizations' =>  Cache::get('sadad-access-token'),
+                    'Authorization' =>  Cache::get('sadad-access-token'),
                     'Accept' => 'application/json',
                     'Content-Type' => 'application/json',
-                ],'json' => $body
+                ],
+                'json' => ['transactionnumber' => $transNo],
             ]);
             if ($response->getStatusCode()==200) {
                 return $response->getBody();
             }
             throw new \Exception("Transaction refund failed");
+        } catch (GuzzleException $e) {
+            throw $e;
+        }
+    }
+
+    public function listInvoices($filter = [])
+    {
+        try {
+            $query = '';
+            if(!empty($filter)){
+                $validated = Validator::make($filter, [
+                    'skip' => 'number',
+                    'limit' => 'number',
+                    'clientname' => 'string',
+                    'invoicenumber' => 'string',
+                    'date' => 'date:date_format:Y-m-d',
+                    'status' => 'number|in:1,2,3,4,5',
+                ]);
+                if($validated->fails()){
+                    \Log::error("Sadad ListInvoice::Validation ".$validated->getMessageBag());
+                    throw new Exception("Invalid input!, Ensure input(s) are correct");
+                }
+                if(in_array('skip',$filter)){
+                    $query='?filter[skip]='.$filter['skip'];
+                }else{
+                    $query='?filter[skip]=0';
+                }
+                if(in_array('limit',$filter)){
+                    $query.='&filter[limit]='.$filter['limit'];
+                }else{
+                    $query.='&filter[limit]=10';
+                }
+                if(in_array('invoicenumber',$filter)){
+                    $query.='&filter[invoicenumber]='.$filter['invoicenumber'];
+                }
+                if(in_array('date',$filter)){
+                    $query.='&filter[date]='.$filter['date'];
+                }
+                if(in_array('status',$filter)){
+                    $query.='&filter[status]='.$filter['status'];
+                }
+            }else{
+                $query='?filter[skip]=0&filter[limit]=20';
+            }
+            $response = $this->client->request('GET', 'invoices/listInvoices'.$query, [
+                'headers' => [
+                    'Authorization' =>  Cache::get('sadad-access-token'),
+                    'Accept' => 'application/json',
+                    'Content-Type' => 'application/json',
+                ]
+            ]);
+            if ($response->getStatusCode()==200) {
+                return $response->getBody();
+            }
+            throw new Exception("Sadad Invoice Listing failed");
+        } catch (GuzzleException $e) {
+            throw $e;
+        }
+    }
+
+    public function createInvoice($payload)
+    {
+        try {
+            \Log::debug(Cache::get('sadad-access-token'));
+            $response = $this->client->request('POST', 'invoices/createInvoice', [
+                'headers' => [
+                    'Authorization' => Cache::get('sadad-access-token'),
+                    'Accept' => 'application/json',
+                    'Content-Type' => 'application/json',
+                ],
+                'json' => $payload
+            ]);
+
+            if ($response->getStatusCode()==200) {
+                return $response->getBody();
+            }
+
+            throw new \Exception("Creating invoice failed");
+        } catch (GuzzleException $e) {
+            throw $e;
+        }
+    }
+
+    public function shareInvoice($payload)
+    {
+        try {
+            $response = $this->client->request('POST', 'invoices/share', [
+                'headers' => [
+                    'Authorization' => Cache::get('sadad-access-token'),
+                    'Accept' => 'application/json',
+                    'Content-Type' => 'application/json',
+                ],
+                'json' => $payload
+            ]);
+
+            if ($response->getStatusCode()==200) {
+                return $response->getBody();
+            }
+
+            throw new \Exception("Sharing invoice failed");
         } catch (GuzzleException $e) {
             throw $e;
         }
