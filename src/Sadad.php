@@ -79,12 +79,20 @@ class Sadad extends Payment
     {
         call_user_func($name, $arguments);
     }
-    private function logEntry($model,$response)
+    public function logEntry($model,$response,$entryType='callback')//$entryType=api/callback
     {
         $logCreated=new SadadLog();
         $logCreated->transable_type=$model->getMorphClass();
         $logCreated->transable_id=$model->id;
-        $logCreated->response=$response;
+        $logCreated->response=json_encode($response);
+        if($entryType =='callback') {
+            if ($response['RESPCODE'] == 1)
+                $logCreated->sadad_id = @$response['transaction_number'];
+            $logCreated->status = @$response['STATUS'];
+        }else{//api
+            $logCreated->sadad_id =  @$response['invoicenumber'];
+            $logCreated->status = @$response['transactionstatus']['name'];
+        }
         $logCreated->save();
         return $logCreated;
     }

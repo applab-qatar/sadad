@@ -13,7 +13,8 @@ class SadadLog extends Model
 
 
     public function __construct() {
-
+        parent::__construct();
+        $this->table = config('applab-sadad.log_table');
     }
 
     public function loggable():MorphTo

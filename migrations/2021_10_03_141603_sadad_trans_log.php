@@ -13,7 +13,7 @@ class SadadTransLog extends Migration
      */
     public function up()
     {
-        Schema::create('sadad_trans_logs', function (Blueprint $table) {
+        Schema::create(config('applab-sadad.log_table'), function (Blueprint $table) {
             $table->increments('id');
             $table->morphs('transable');
             $table->string('sadad_id')->nullable();
@@ -30,6 +30,6 @@ class SadadTransLog extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sadad_trans_logs');
+        Schema::dropIfExists(config('applab-sadad.log_table'));
     }
 }
